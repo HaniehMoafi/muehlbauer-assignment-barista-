@@ -4,13 +4,13 @@ import de.muehlbauer.assignment.barista.exception.BaristaServiceException;
 import de.muehlbauer.assignment.barista.service.OrderGateway;
 import de.muehlbauer.assignment.order.api.response.GeneralOrderApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import static de.muehlbauer.assignment.barista.util.Constant.FINISH_ENDPOINT;
-import static de.muehlbauer.assignment.barista.util.Constant.ORDER_BASE_URL;
 
 @RequiredArgsConstructor
 @Service
@@ -18,10 +18,13 @@ public class OrderGatewayImpl implements OrderGateway {
 
     private final RestTemplate restTemplate;
 
+    @Value("${order.service.base.url}")
+    private String orderBaseUrl;
+
 
     @Override
     public void finishOrder(Integer orderNumber) throws BaristaServiceException {
-        String url = urlBuilder(ORDER_BASE_URL + FINISH_ENDPOINT, "orderNumber", orderNumber);
+        String url = urlBuilder(orderBaseUrl + FINISH_ENDPOINT, "orderNumber", orderNumber);
         try {
             GeneralOrderApiResponse response = restTemplate.patchForObject(url, null,
                     GeneralOrderApiResponse.class);

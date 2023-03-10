@@ -33,10 +33,12 @@ public class BaristaServiceTest {
     void setUp() {
         repository.save(creatBaristaOrder(1));
     }
+
     @AfterAll
     void clear() {
         repository.deleteAll();
     }
+
     private BaristaOrderEntity creatBaristaOrder(Integer orderNumber) {
         BaristaOrderEntity entity = new BaristaOrderEntity();
         entity.setOrderNumber(orderNumber);
@@ -45,25 +47,21 @@ public class BaristaServiceTest {
     }
 
     @Test
-    void barista_order_status_should_be(){
+    void barista_order_status_should_be() {
         List<BaristaOrderEntity> all = repository.findAll();
-        assertEquals(all.get(0).getStatus(),  OrderStatus.IN_PREPARATION);
+        assertEquals(all.get(0).getStatus(), OrderStatus.IN_PREPARATION);
     }
 
 
     @Test
-    void barista_order_should_not_save_duplicate_order(){
-        BaristaServiceException thrown = assertThrows(
-                BaristaServiceException.class,
-                () -> baristaService.addOrder(1),
-                "Expected do not allow to save duplicate order"
-        );
+    void barista_order_should_not_save_duplicate_order() {
+        BaristaServiceException thrown = assertThrows(BaristaServiceException.class, () -> baristaService.addOrder(1), "Expected do not allow to save duplicate order");
         assertTrue(thrown.getMessage().contains("add.order.failed"));
     }
 
     @ParameterizedTest
     @CsvSource({"IN_PREPARATION,FINISHED,PICKED_UP"})
-    void find_next_step(String step2,String step3,String step4){
+    void find_next_step(String step2, String step3, String step4) {
 
         OrderStatus should_be_finished = OrderStatus.findNextStep(OrderStatus.valueOf(step2));
         OrderStatus should_be_picked_up = OrderStatus.findNextStep(OrderStatus.valueOf(step3));
@@ -83,13 +81,9 @@ public class BaristaServiceTest {
     }
 
     @Test
-    void order_can_not_be_cancel_in_other_step(){
+    void order_can_not_be_cancel_in_other_step() {
 
-        BaristaServiceException thrown = assertThrows(
-                BaristaServiceException.class,
-                () ->  baristaService.cancelOrder(1),
-                "Expected do not allow to cancel order in other steps"
-        );
+        BaristaServiceException thrown = assertThrows(BaristaServiceException.class, () -> baristaService.cancelOrder(1), "Expected do not allow to cancel order in other steps");
         assertTrue(thrown.getMessage().contentEquals("barista.cancel.order.failed"));
 
     }

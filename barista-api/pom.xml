@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.assignment</groupId>
+    <groupId>de.muehlbauer.assignment</groupId>
     <artifactId>barista-api</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
@@ -51,7 +51,16 @@
 
 
     </dependencies>
-
+    <distributionManagement>
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>central</id>
+            <name>libs-release</name>
+            <url>https://haniehmoafi.jfrog.io/artifactory/libs-release</url>
+        </repository>
+    </distributionManagement>
     <build>
         <plugins>
             <plugin>
